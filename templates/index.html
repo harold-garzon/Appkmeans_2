@@ -3,43 +3,285 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clasificación de clientes</title>
+    <title>Clasificación de Clientes</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-      body { font-family: Arial, sans-serif; max-width: 680px; margin: 40px auto; padding: 0 16px; }
-      label { display:block; margin-top:8px; }
-      input { padding:6px; width:200px; }
-      .result { margin-top:16px; padding:10px; border:1px solid #ddd; background:#f9f9f9 }
-      .error { color: #a00 }
+      :root {
+        --bg-color: #f4f6f9;
+        --card-bg: #ffffff;
+        --text-main: #1a1a1a;
+        --text-muted: #666666;
+        --primary: #FFCC29; /* Dorado/Amarillo institucional */
+        --primary-hover: #e5b820;
+        --dark-accent: #1a1a1a;
+        --error-color: #e03131;
+        --error-bg: #fff5f5;
+        --border-color: #e0e0e0;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: var(--card-bg);
+        max-width: 480px;
+        width: 100%;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark-accent);
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .error-box {
+        background-color: var(--error-bg);
+        border-left: 4px solid var(--error-color);
+        color: var(--error-color);
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .label-text {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--dark-accent);
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-wrapper i {
+        position: absolute;
+        left: 14px;
+        color: var(--text-muted);
+        width: 18px;
+        height: 18px;
+        pointer-events: none;
+      }
+
+      .input-wrapper input {
+        width: 100%;
+        padding: 14px 14px 14px 44px;
+        font-size: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background-color: #fafafa;
+        transition: all 0.2s ease;
+        color: var(--text-main);
+      }
+
+      .input-wrapper input:focus {
+        outline: none;
+        border-color: var(--dark-accent);
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(255, 204, 41, 0.15);
+      }
+
+      .field-description {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+
+      .btn-submit {
+        width: 100%;
+        padding: 14px;
+        font-size: 15px;
+        font-weight: 600;
+        background-color: var(--dark-accent);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-submit:hover {
+        background-color: #333333;
+        transform: translateY(-1px);
+      }
+
+      .btn-submit:active {
+        transform: translateY(1px);
+      }
+
+      /* Panel de Resultados Optimizado */
+      .result-box {
+        margin-top: 32px;
+        padding: 24px;
+        background: linear-gradient(145deg, #ffffff, #fdfdfd);
+        border-radius: 12px;
+        border: 2px solid var(--primary);
+        box-shadow: 0 6px 20px rgba(255, 204, 41, 0.08);
+      }
+
+      .result-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark-accent);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .result-data {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+        border-bottom: 1px dashed var(--border-color);
+      }
+
+      .result-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--dark-accent);
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+      }
+
+      .result-group span {
+        font-size: 13px;
+        opacity: 0.8;
+      }
+
+      .result-group strong {
+        font-size: 18px;
+        color: var(--primary);
+        font-weight: 700;
+      }
     </style>
   </head>
   <body>
-    <h1>Clasificación de clientes</h1>
-    <p>Introduce los datos de ingresos y gastos para ver el grupo asignado.</p>
 
-    {% if error %}
-      <p class="error">{{ error }}</p>
-    {% endif %}
-
-    <form method="post" action="/predict">
-      <label>Ingresos:
-        <input name="ingresos" type="text" value="{{ ingresos or '' }}" placeholder="ej. 3500" />
-      </label>
-      <label>Gastos:
-        <input name="gastos" type="text" value="{{ gastos or '' }}" placeholder="ej. 1200" />
-      </label>
-      <div style="margin-top:10px">
-        <button type="submit">Clasificar</button>
+    <div class="container">
+      <div class="header">
+        <h1>Clasificación de Clientes</h1>
+        <p>Analiza el comportamiento financiero introduciendo los flujos monetarios para determinar el segmento del usuario.</p>
       </div>
-    </form>
 
-    {% if group %}
-      <div class="result">
-        <strong>Resultado:</strong>
-        <p>Ingresos: {{ ingresos }} — Gastos: {{ gastos }}</p>
-        <p><strong>Grupo asignado:</strong> {{ group }}</p>
-      </div>
-    {% endif %}
+      {% if error %}
+        <div class="error-box">
+          <i data-lucide="alert-circle"></i>
+          <span>{{ error }}</span>
+        </div>
+      {% endif %}
 
-    
+      <form method="post" action="/predict">
+        
+        <div class="form-group">
+          <label class="label-text">Ingresos Mensuales</label>
+          <div class="input-wrapper">
+            <i data-lucide="trending-up"></i>
+            <input 
+              name="ingresos" 
+              type="number" 
+              step="any"
+              value="{{ ingresos or '' }}" 
+              placeholder="Ej. 3500" 
+              required
+            />
+          </div>
+          <span class="field-description">Suma total de percepciones financieras o rentas del cliente en el último mes.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="label-text">Gastos Totales</label>
+          <div class="input-wrapper">
+            <i data-lucide="trending-down"></i>
+            <input 
+              name="gastos" 
+              type="number" 
+              step="any"
+              value="{{ gastos or '' }}" 
+              placeholder="Ej. 1200" 
+              required
+            />
+          </div>
+          <span class="field-description">Monto consolidado de obligaciones, costos operativos y consumos fijos/variables.</span>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <span>Clasificar Segmento</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </button>
+      </form>
+
+      {% if group %}
+        <div class="result-box">
+          <div class="result-title">
+            <i data-lucide="bar-chart-3" style="color: var(--primary);"></i>
+            <span>Mesa de Análisis</span>
+          </div>
+          <div class="result-data">
+            Variables evaluadas — <strong>Ingresos:</strong> {{ ingresos }} | <strong>Gastos:</strong> {{ gastos }}
+          </div>
+          <div class="result-group">
+            <span>Grupo Asignado:</span>
+            <strong>{{ group }}</strong>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
   </body>
 </html>
